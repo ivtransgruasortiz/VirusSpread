@@ -44,7 +44,6 @@ class Person:
         # Movimento pegajoso
         # mov_pegajoso = random.choices(intervalo_random, weights)[0]
         # delta_pos = [x if (delta_pos.index(x) == 0) else x * mov_pegajoso for x in delta_pos]
-        pos_paso = []
         if last_pos is None:
             pos_paso = [sum(x) for x in zip(self.pos, delta_pos)]
         else:
