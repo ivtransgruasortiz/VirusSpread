@@ -6,21 +6,29 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 import time
+# choices(population, weights)
 
 # Constants
-min, max = -10, 20
-pasos = 200
-num_pers = 50
+intervalo_random = [0, 1]  #Pegajosidad
+weights = [.95, .05]  #Pegajosidad
+# min, max = -10, 20
+min, max = -110, 110
+pasos = 300
+num_pers = 100
 pause = 0.01
 value_height = 10
 value_width = 10
 sizemarker = 80
-# func_color = [random.choice(['r', 'b', 'g']) for x in dict_persons]
+# func_color = [random.choice(['r', 'b', 'g']) for x in dict_persons]  # Para el futuro
 func_color = 'r'
+dist_ini = 10
+frontier = 100
+paso_mov = 1
+
 
 class Person:
     # Initial initialization method
-    def __init__(self, pos=None, dist=10, paso=1):
+    def __init__(self, pos=None, dist=dist_ini, paso=paso_mov):
         self.paso = paso
         self.dist = dist
         if pos is None:
@@ -33,16 +41,15 @@ class Person:
     # Returns the position of a individual person
     def pos_new(self, last_pos=None):
         delta_pos = list(map(lambda x: random.randint(-1, 1) * self.paso, self.pos))
-        # print('DELTA')
-        # print(delta_pos)
+        mov_pegajoso = random.choices(intervalo_random, weights)[0]
+        delta_pos = [x if (delta_pos.index(x) == 0) else x * mov_pegajoso for x in delta_pos]
         if last_pos is None:
             pos_paso = [sum(x) for x in zip(self.pos, delta_pos)]
         else:
             pos_paso = [sum(x) for x in zip(last_pos, delta_pos)]
-        # print('POS_PASO')
-        # print(pos_paso)
-        # Circular edges
-        pos_paso = [x if ((x >= 0) & (x < self.dist)) else abs(abs(x) - self.dist) for x in pos_paso]
+        # Circular boundaries
+        # pos_paso = [x if ((x >= 0) & (x < self.dist)) else abs(abs(x) - self.dist) for x in pos_paso]
+        pos_paso = [x if ((x >= -frontier) & (x < frontier)) else abs(abs(x) - frontier) for x in pos_paso]
         return delta_pos, pos_paso
 
 
