@@ -2,6 +2,8 @@
 # The class that defines people
 
 import random
+import matplotlib
+matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
@@ -12,17 +14,17 @@ import time
 intervalo_random = [0, 1]  #Pegajosidad
 weights = [.95, .05]  #Pegajosidad
 # min, max = -10, 20
-min, max = -110, 110
-pasos = 300
-num_pers = 100
+min, max = -110, 110  # maximos y minimos grafico
+pasos = 500
+num_pers = 30
 pause = 0.01
 value_height = 10
 value_width = 10
 sizemarker = 80
 # func_color = [random.choice(['r', 'b', 'g']) for x in dict_persons]  # Para el futuro
 func_color = 'r'
-dist_ini = 10
-frontier = 100
+dist_ini = 10  # limit para generacion espontanea
+frontier = 50  # frontera real movimiento
 paso_mov = 1
 
 
@@ -35,21 +37,21 @@ class Person:
             pos_ini = [0, 0, 0]
             pos = list(map(lambda x: random.randint(x, self.dist), pos_ini))
         self.pos = pos
-        # print('POS_INI')
-        # print(self.pos)
-
     # Returns the position of a individual person
+
     def pos_new(self, last_pos=None):
         delta_pos = list(map(lambda x: random.randint(-1, 1) * self.paso, self.pos))
-        mov_pegajoso = random.choices(intervalo_random, weights)[0]
-        delta_pos = [x if (delta_pos.index(x) == 0) else x * mov_pegajoso for x in delta_pos]
+        # Movimento pegajoso
+        # mov_pegajoso = random.choices(intervalo_random, weights)[0]
+        # delta_pos = [x if (delta_pos.index(x) == 0) else x * mov_pegajoso for x in delta_pos]
+        pos_paso = []
         if last_pos is None:
             pos_paso = [sum(x) for x in zip(self.pos, delta_pos)]
         else:
             pos_paso = [sum(x) for x in zip(last_pos, delta_pos)]
         # Circular boundaries
         # pos_paso = [x if ((x >= 0) & (x < self.dist)) else abs(abs(x) - self.dist) for x in pos_paso]
-        pos_paso = [x if ((x >= -frontier) & (x < frontier)) else abs(abs(x) - frontier) for x in pos_paso]
+        pos_paso = [x if ((x >= -frontier) & (x < frontier)) else abs(abs(x) - 2*frontier) for x in pos_paso]
         return delta_pos, pos_paso
 
 
